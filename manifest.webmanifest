@@ -1,0 +1,1 @@
+{"name":"My Allotment Planner","short_name":"Allotment","description":"Your personal growing calendar, plant varieties and allotment beds","start_url":"./","scope":"./","display":"standalone","background_color":"#f4f8f1","theme_color":"#1c5d3a","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
