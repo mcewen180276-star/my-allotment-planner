@@ -1,16 +1,12 @@
-# My Allotment Planner
+# My Allotment Planner — Version 3
 
-A free, offline-friendly static web app with 255 named starter varieties, My Growing List, beds, month/day/year calendar, diary, seed inventory, harvest records, reminders, and JSON backups.
+Free static offline-capable web app for GitHub Pages. Upload the six files **index.html, plants.json, sw.js, icon.svg, manifest.webmanifest, README.md** to the root of the existing repository. Keep the same GitHub Pages address to preserve browser-local records.
 
-## Publish for free on GitHub Pages
-1. Create a new public GitHub repository named `my-allotment-planner`.
-2. Upload `index.html`, `plants.json`, `manifest.webmanifest`, `icon.svg`, and `sw.js` to the **root** of the repository (not in a subfolder).
-3. In **Settings → Pages**, select **Deploy from a branch**, `main`, `/ (root)`, and Save.
-4. Wait for the Pages deployment, then open the URL shown in Settings → Pages.
-5. In Chrome on Android, choose **Add to Home screen** / **Install app**.
+## Improvements
+Dashboard, seasonal and plant-specific checklists, 4×4 bed visual planner, expanded variety index, calendar, shopping list, harvest weight comparisons, compressed photo diary, optional Open-Meteo seven-day forecast, and local rolling recovery snapshots.
 
-**Important:** Opening `index.html` directly as a file won't load `plants.json`; it must be hosted. All personal records are stored locally in that browser's `localStorage`, not synced across devices. Export backups regularly.
+## Data safety
+The app deliberately retains the `my-allotment-planner-v1` localStorage key and previous JSON backup schema. Export a backup before updating. Browser storage is device/browser-specific and can be erased; use **Settings → Export JSON backup** regularly. Recovery snapshots are local, not cloud backups. Photos increase storage use. No accounts, subscriptions or paid APIs.
 
-**Internet search:** Uses Wikipedia's public API to retrieve background text and links, then opens a draft for manual review. It does not automatically obtain or verify detailed cultivar-specific growing data, and Wikipedia may not contain the requested cultivar. RHS search link is included for manual cross-checking. No paid AI API is required.
-
-**Accuracy:** Starter dates are broad UK guidance shared by crop groups, not independently checked cultivar-specific recommendations. Adjust for South West Scotland weather and seed-packet directions. The calendar shows month-level windows even when a day is selected. Reminder entries are in-app only, not push notifications.
+## Accuracy and limitations
+Plant dates are approximate crop-level UK monthly windows, NOT verified individual cultivar instructions. Added varieties inherit their crop's timings pending verification. Companion planting claims vary in evidence. Calendar daily views display month-wide windows, not day-specific predictions. Wikipedia import produces an editable draft; the app does not claim to automatically extract reliable sowing dates from web pages. Weather requires an internet connection and uses a manually selected regional location. The bed map is a conceptual 4×4 grid, not a scale drawing. Notifications are in-app checklists, not push alerts.
