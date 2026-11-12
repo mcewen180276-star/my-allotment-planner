@@ -1,12 +1,12 @@
-# My Allotment Planner — Version 3
+# My Allotment Planner V4
 
-Free static offline-capable web app for GitHub Pages. Upload the six files **index.html, plants.json, sw.js, icon.svg, manifest.webmanifest, README.md** to the root of the existing repository. Keep the same GitHub Pages address to preserve browser-local records.
+Upload all six files to the ROOT of your existing GitHub Pages repository. Keep the same website address to retain browser-local records. Before upgrading, open V3 Settings and **Export JSON backup**.
 
-## Improvements
-Dashboard, seasonal and plant-specific checklists, 4×4 bed visual planner, expanded variety index, calendar, shopping list, harvest weight comparisons, compressed photo diary, optional Open-Meteo seven-day forecast, and local rolling recovery snapshots.
+## Included
+All V3 features, plus smart planting-space calculator, succession batches, seed-to-harvest records, adjustable bed grids, crop-family rotation warnings, companion suggestions, plant problem guidance, perennial reminders, seed-saving logs, expense tracking, quick actions, and print / Save as PDF reports. The original `my-allotment-planner-v1` storage key and JSON state structure are retained; new data is additive under `state.v4`.
 
-## Data safety
-The app deliberately retains the `my-allotment-planner-v1` localStorage key and previous JSON backup schema. Export a backup before updating. Browser storage is device/browser-specific and can be erased; use **Settings → Export JSON backup** regularly. Recovery snapshots are local, not cloud backups. Photos increase storage use. No accounts, subscriptions or paid APIs.
+## Accuracy
+The expanded catalogue combines existing named varieties with additional cultivar-name entries. New entries inherit **approximate crop-level guidance**, not independently verified cultivar instructions. Check seed packets, RHS and local frost conditions before planting. The calculator is theoretical, and companion advice is not a guarantee. Weather is optional via Open-Meteo; no background push alerts. Photos and backups remain on your device unless you export them.
 
-## Accuracy and limitations
-Plant dates are approximate crop-level UK monthly windows, NOT verified individual cultivar instructions. Added varieties inherit their crop's timings pending verification. Companion planting claims vary in evidence. Calendar daily views display month-wide windows, not day-specific predictions. Wikipedia import produces an editable draft; the app does not claim to automatically extract reliable sowing dates from web pages. Weather requires an internet connection and uses a manually selected regional location. The bed map is a conceptual 4×4 grid, not a scale drawing. Notifications are in-app checklists, not push alerts.
+## Installation
+GitHub repository → Add file → Upload files → Commit. Settings → Pages → deploy from `main` / `(root)`. Refresh after publishing; if a stale service worker remains, open the website in a fresh browser tab. Never clear site storage before exporting a backup.
