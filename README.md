@@ -10,3 +10,7 @@ The expanded catalogue combines existing named varieties with additional cultiva
 
 ## Installation
 GitHub repository → Add file → Upload files → Commit. Settings → Pages → deploy from `main` / `(root)`. Refresh after publishing; if a stale service worker remains, open the website in a fresh browser tab. Never clear site storage before exporting a backup.
+
+
+### Expanded plant index (November 2026)
+Added 466 distinct plant groups across flowers, vegetables, fruits and herbs. These are name-index entries, not verified named cultivars. Their planting windows are intentionally blank rather than invented. Use Copy & customise to add verified sowing, flowering and harvest months from RHS or seed packets. Existing saved data key is unchanged.
