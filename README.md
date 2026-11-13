@@ -16,11 +16,3 @@ GitHub repository → Add file → Upload files → Commit. Settings → Pages �
 Added 466 distinct plant groups across flowers, vegetables, fruits and herbs. These are name-index entries, not verified named cultivars. Their planting windows are intentionally blank rather than invented. Use Copy & customise to add verified sowing, flowering and harvest months from RHS or seed packets. Existing saved data key is unchanged.
 
 V4.1: Seed inventory entries can be edited, linked to exact database varieties, and highlighted in database. Legacy seed records retained.
-
-
-## V4.2 additions
-- Beds tab: scale-aware placement map using actual bed length and width, 25 cm grid, tap-to-place and coordinate editing, zoom, and print. Existing 4×4 and V4 grid layouts remain available separately.
-- Plant Details: add/remove compressed photographs per variety.
-- Seed Inventory: add/remove packet photographs per inventory record.
-- Photos and placements are included in JSON backups because they are stored within the existing app state. Export backups regularly; browser storage has size limits and saving many images may fail.
-- The scale diagram is a planting aid, not a surveyed CAD plan. Plant circles indicate approximate spacing.
