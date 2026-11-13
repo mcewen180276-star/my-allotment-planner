@@ -14,3 +14,5 @@ GitHub repository → Add file → Upload files → Commit. Settings → Pages �
 
 ### Expanded plant index (November 2026)
 Added 466 distinct plant groups across flowers, vegetables, fruits and herbs. These are name-index entries, not verified named cultivars. Their planting windows are intentionally blank rather than invented. Use Copy & customise to add verified sowing, flowering and harvest months from RHS or seed packets. Existing saved data key is unchanged.
+
+V4.1: Seed inventory entries can be edited, linked to exact database varieties, and highlighted in database. Legacy seed records retained.
