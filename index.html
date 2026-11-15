@@ -251,50 +251,57 @@ const v45PreviousShowPlant=showPlant;
 showPlant=function(id){v45PreviousShowPlant(id);let p=getPlant(id),modal=$('modalbody');if(!p||!modal)return;let status=p.researchStatus;if(status){let box=document.createElement('div');box.className='note';box.innerHTML='<b>Online growing information:</b> '+esc(status==='review-needed'?'Sources found — review before saving':status==='offline'?'Offline — research queued':status==='no-results'?'No matching source found':'Waiting for research')+' <button class="secondary" onclick="v45Research(\''+esc(id)+'\')">Search again</button>';modal.appendChild(box)}};
 
 
-/* V4.5.1: choose an existing plant group, optionally inherit editable guidance. */
-const v451EditSeed=editSeed;
+/* V4.5.2: existing-seed group assignment and save fix. */
+const v452EditSeed=editSeed;
 editSeed=function(id){
- v451EditSeed(id);
+ v452EditSeed(id);
  const form=$('modalbody')?.querySelector('form');if(!form)return;
- const existing=form.querySelector('[name="newPlant"]');
+ const current=id?state.seeds.find(x=>x.id===id):null;
+ const linked=current?.plantId?getPlant(current.plantId):null;
  const names=[...new Set(allPlants().map(p=>p.name))].sort((a,b)=>a.localeCompare(b));
  const section=document.createElement('div');section.className='card';
- section.innerHTML=`<h3>New variety — choose its plant group</h3><p class="muted">For example, choose Carrot and enter a new variety. You can copy general growing advice from another carrot, then edit it.</p><label>Existing plant group<select name="v451Group" onchange="v451GroupChanged(this.form)"><option value="">Choose a plant group (optional)</option>${names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('')}</select></label><label>Use growing information from<select name="v451Template"><option value="">Start with empty growing information</option></select></label><label><input type="checkbox" name="v451Copy" checked> Copy existing growing details as an editable starting point</label><p class="muted">Copied advice is marked as general guidance, not verified for your exact variety. You can edit it in Plant Details afterwards.</p>`;
- form.insertBefore(section,form.querySelector('button[type="submit"]'));
+ section.innerHTML=`<h3>Assign seed to a plant group</h3><p class="muted">Select an existing plant (e.g. Carrot) and enter the variety. This works for new AND existing seed packets.</p><label>Plant group<select name="v452Group" onchange="v452GroupChanged(this.form)"><option value="">Keep current database link / no group</option>${names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('')}</select></label><label>Variety name<input name="v452Variety" placeholder="e.g. Purple Haze" value="${esc(linked?.variety||'')}"></label><label>Copy growing guidance from<select name="v452Template"><option value="">Do not copy guidance</option></select></label><label><input type="checkbox" name="v452Copy" checked> Copy guidance as an editable starting point for new varieties</label><p class="muted">Copied information is general guidance only; verify the details for your variety.</p>`;
+ const submit=form.querySelector('button[type="submit"]');if(submit)form.insertBefore(section,submit);else form.append(section);
+ if(linked){form.elements.v452Group.value=linked.name;v452GroupChanged(form);form.elements.v452Variety.value=linked.variety||''}
 };
-function v451GroupChanged(form){
- const group=form.elements.v451Group.value,options=allPlants().filter(p=>p.name===group);
- const target=form.elements.v451Template;
- target.innerHTML='<option value="">Start with empty growing information</option>'+options.map(p=>`<option value="${esc(p.id)}">${esc(p.variety)}</option>`).join('');
+function v452GroupChanged(form){
+ const group=form.elements.v452Group.value;
+ const options=allPlants().filter(p=>v45Norm(p.name)===v45Norm(group));
+ const target=form.elements.v452Template;
+ target.innerHTML='<option value="">Do not copy guidance</option>'+options.map(p=>`<option value="${esc(p.id)}">${esc(p.variety||'Unspecified')}</option>`).join('');
  if(options.length)target.value=options[0].id;
- const plant=form.querySelector('[name="newPlant"]');if(plant&&group)plant.value=group;
 }
-const v451SaveSeed=saveSeed;
+const v452SaveSeed=saveSeed;
 saveSeed=function(e,id){
- const form=e.target,group=String(form.elements.v451Group?.value||'').trim();
- const variety=String(form.elements.newVariety?.value||'').trim();
- const templateId=String(form.elements.v451Template?.value||'');
- if(group){
-  if(!variety){e.preventDefault();toast('Enter the new variety name');return}
-  const existing=v45Find(group,variety);
-  if(!existing){
-   const p=v45Make(group,variety);
-   if(form.elements.v451Copy?.checked&&templateId){
-    const source=getPlant(templateId);
-    if(source){
-     const fields=['indoor','outdoor','transplant','harvest','spacing','depth','sun','soil','water','feed','instructions','companions','pests','hardiness','height','flowering','pruning'];
-     for(const key of fields){if(source[key]!==undefined)p[key]=JSON.parse(JSON.stringify(source[key]))}
-     p.inheritedFrom=source.id;
-     p.informationStatus='General guidance copied from '+source.name+' — '+source.variety+'; check against seed packet';
-     p.source='General guidance copied from another variety; not cultivar-verified';
-    }
+ const form=e.target,group=String(form.elements.v452Group?.value||'').trim();
+ const variety=String(form.elements.v452Variety?.value||'').trim();
+ if(!group)return v452SaveSeed(e,id);
+ e.preventDefault();
+ if(!variety){toast('Enter the variety name before saving');form.elements.v452Variety?.focus();return}
+ let plant=v45Find(group,variety),created=false;
+ if(!plant){
+  plant=v45Make(group,variety);created=true;
+  const templateId=String(form.elements.v452Template?.value||'');
+  if(form.elements.v452Copy?.checked&&templateId){
+   const source=getPlant(templateId);
+   if(source){
+    const fields=['indoor','outdoor','transplant','harvest','spacing','depth','sun','soil','water','feed','instructions','companions','pests','hardiness','height','flowering','pruning'];
+    for(const key of fields)if(source[key]!==undefined)plant[key]=JSON.parse(JSON.stringify(source[key]));
+    plant.inheritedFrom=source.id;
+    plant.informationStatus='General guidance copied from '+source.name+' — '+source.variety+'; verify for this cultivar';
+    plant.source='General guidance copied from another variety; not cultivar-verified';
    }
-   dmData().pending[p.id]=true;save();
   }
-  form.querySelector('[name="plantId"]').value=v45Find(group,variety).id;
-  form.querySelector('[name="title"]').value=group+' — '+variety;
  }
- return v451SaveSeed(e,id);
+ // Select elements cannot accept an id that is absent from their option list.
+ const select=form.elements.plantId;
+ if(select){
+  if(![...select.options].some(o=>o.value===plant.id))select.add(new Option(group+' — '+variety,plant.id));
+  select.value=plant.id;
+ }
+ const title=form.elements.title;if(title)title.value=group+' — '+variety;
+ v452SaveSeed(e,id);
+ if(created){save();v45Research(plant.id)}
 };
 
 init();

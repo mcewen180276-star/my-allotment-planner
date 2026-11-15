@@ -56,3 +56,10 @@ New Database Manager tab: filters for incomplete records, owned seeds, and resea
 
 ## V4.5.1 — plant groups and editable inherited guidance
 When adding an unlisted seed variety, select an existing plant group (e.g. Carrot), enter the variety, and optionally copy growing guidance from an existing variety. Copied guidance is explicitly marked as unverified for the new cultivar and can be edited later. Online research remains available. Back up before upgrading.
+
+## V4.5.2 — Fix assigning existing seed packets to plant groups
+- Added a real variety-name input to the group assignment form.
+- Works when editing existing seed packets as well as adding new ones.
+- Newly created varieties are added to the plant database and selected in the seed's database link before saving.
+- Optional copied growing advice remains editable and is marked as unverified for the cultivar.
+- Existing seed quantity, dates, notes and photos remain untouched when assigning the variety.
