@@ -7,7 +7,7 @@
  .owned-seed{background:#e3f5d9;border-left:5px solid #398044;border-radius:8px;padding:10px}.seed-owned{background:#d6f1c8;color:#19512b;border-radius:99px;padding:3px 8px;font-size:.8rem;font-weight:700}.seed-row[hidden]{display:none!important} .db-tabs{display:flex;overflow-x:auto;gap:7px;padding:6px 0 14px;scrollbar-width:thin}.db-tabs button{white-space:nowrap;flex-shrink:0}.db-tabs .db-active{background:#195c3e;color:white}.db-check{display:flex;align-items:center;gap:8px;margin:12px 0}.db-check input{width:auto}.db-variety{display:flex;flex-wrap:wrap;align-items:center;gap:10px}</style></head><body><header><h1>🌱 My Allotment Planner</h1><p>South West Scotland • Your growing year, organised</p></header><nav id="nav"></nav><main id="app"></main><dialog id="modal"><div id="modalbody"></div><div class="actions"><button class="secondary" onclick="closeModal()">Close</button></div></dialog><div id="toast" role="status"></div><script>
 const TABS=[['home','🏡 Home'],['plants','🌿 Database'],['growing','🪴 My Growing'],['beds','▦ Beds'],['calendar','📅 Calendar'],['seeds','🌰 Seeds'],['diary','📓 Diary'],['harvest','🧺 Harvest'],['tasks','🔔 Tasks'],['settings','⚙️ Settings']];
 const KEY='my-allotment-planner-v1';let seedPlants=[];let state={custom:[],growing:[],beds:[],diary:[],seeds:[],harvest:[],tasks:[],bedHistory:[],settings:{frostNote:'Outdoor dates are approximate. In South West Scotland, tender crops may need protection until late May or early June.'}};let tab='home',search='',category='All',viewDate=new Date(),calendarMode='month',calendarFilter='all',calendarSelected=new Date();
-const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7),dateISO=d=>new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10),today=()=>dateISO(new Date()),monthName=m=>new Date(2024,m-1,1).toLocaleString('en-GB',{month:'short'}),allPlants=()=>[...seedPlants,...state.custom],getPlant=id=>allPlants().find(x=>x.id===id),plantName=id=>{let p=getPlant(id);return p?`${p.name} — ${p.variety}`:'Unknown plant'},getBed=id=>state.beds.find(b=>b.id===id),save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){toast('Storage is full — export a backup now')}};
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7),dateISO=d=>new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10),today=()=>dateISO(new Date()),monthName=m=>new Date(2024,m-1,1).toLocaleString('en-GB',{month:'short'}),allPlants=()=>[...seedPlants,...state.custom].filter(p=>!(state.hiddenPlantIds||[]).includes(p.id)),getPlant=id=>allPlants().find(x=>x.id===id),plantName=id=>{let p=getPlant(id);return p?`${p.name} — ${p.variety}`:'Unknown plant'},getBed=id=>state.beds.find(b=>b.id===id),save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state))}catch(e){toast('Storage is full — export a backup now')}};
 function toast(msg){let e=$('toast');e.textContent=msg;e.style.display='block';clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>e.style.display='none',3500)}
 function openModal(content){$('modalbody').innerHTML=content;$('modal').showModal()}function closeModal(){$('modal').close()}
 function render(){ $('nav').innerHTML=TABS.map(([id,n])=>`<button class="${tab===id?'active':''}" onclick="go('${id}')">${n}</button>`).join('');let renderers={home:renderHome,plants:renderPlants,growing:renderGrowing,beds:renderBeds,calendar:renderCalendar,seeds:renderSeeds,diary:renderDiary,harvest:renderHarvest,tasks:renderTasks,settings:renderSettings};$('app').innerHTML=renderers[tab]();}
@@ -263,6 +263,23 @@ editSeed=function(id){
  section.innerHTML=`<h3>Assign seed to a plant group</h3><p class="muted">Select an existing plant (e.g. Carrot) and enter the variety. This works for new AND existing seed packets.</p><label>Plant group<select name="v452Group" onchange="v452GroupChanged(this.form)"><option value="">Keep current database link / no group</option>${names.map(n=>`<option value="${esc(n)}">${esc(n)}</option>`).join('')}</select></label><label>Variety name<input name="v452Variety" placeholder="e.g. Purple Haze" value="${esc(linked?.variety||'')}"></label><label>Copy growing guidance from<select name="v452Template"><option value="">Do not copy guidance</option></select></label><label><input type="checkbox" name="v452Copy" checked> Copy guidance as an editable starting point for new varieties</label><p class="muted">Copied information is general guidance only; verify the details for your variety.</p>`;
  const submit=form.querySelector('button[type="submit"]');if(submit)form.insertBefore(section,submit);else form.append(section);
  if(linked){form.elements.v452Group.value=linked.name;v452GroupChanged(form);form.elements.v452Variety.value=linked.variety||''}
+ // Copy the variety already typed in the seed title into the group variety field.
+ // Keep the variety field editable; do not overwrite it once the user changes it.
+ const titleInput=form.elements.title, varietyInput=form.elements.v452Variety;
+ let manuallyEdited=false;
+ varietyInput.addEventListener('input',()=>{manuallyEdited=true});
+ function syncVariety(){
+  if(manuallyEdited)return;
+  const title=(titleInput?.value||'').trim();
+  const group=form.elements.v452Group.value.trim();
+  if(!title)return;
+  const parts=title.split(/\s+[—–-]\s+/);
+  const candidate=parts.length>1&&(!group||v45Norm(parts[0])===v45Norm(group))?parts.slice(1).join(' — ').trim():title;
+  varietyInput.value=candidate;
+ }
+ if(!linked)syncVariety();
+ titleInput?.addEventListener('input',syncVariety);
+ form.elements.v452Group.addEventListener('change',syncVariety);
 };
 function v452GroupChanged(form){
  const group=form.elements.v452Group.value;
@@ -302,6 +319,40 @@ saveSeed=function(e,id){
  const title=form.elements.title;if(title)title.value=group+' — '+variety;
  v452SaveSeed(e,id);
  if(created){save();v45Research(plant.id)}
+};
+
+
+/* V4.5.3: safe database deletion with confirmation and restore. */
+function v453DeletePlant(id){
+ const plant=getPlant(id);if(!plant)return toast('Plant not found');
+ const seeds=state.seeds.filter(x=>x.plantId===id).length;
+ const growing=state.growing.filter(x=>x.plantId===id).length;
+ if(seeds||growing){toast('This variety is used by '+seeds+' seed packet(s) and '+growing+' growing entry/entries. Unlink or remove those entries first.');return}
+ const message=plant.custom?'Delete '+plant.name+' — '+plant.variety+' from your database? This cannot be undone without a backup.':'Hide '+plant.name+' — '+plant.variety+' from the starter database? You can restore it later.';
+ if(!confirm(message))return;
+ if(plant.custom){state.custom=state.custom.filter(p=>p.id!==id);if(state.v43?.pending)delete state.v43.pending[id]}
+ else{state.hiddenPlantIds=state.hiddenPlantIds||[];if(!state.hiddenPlantIds.includes(id))state.hiddenPlantIds.push(id)}
+ save();closeModal();render();toast(plant.custom?'Variety deleted':'Starter variety hidden');
+}
+function v453RestorePlants(){
+ const count=(state.hiddenPlantIds||[]).length;
+ if(!count)return toast('No hidden starter varieties');
+ if(!confirm('Restore '+count+' hidden starter varieties?'))return;
+ state.hiddenPlantIds=[];save();render();toast('Starter varieties restored');
+}
+const v453ShowPlant=showPlant;
+showPlant=function(id){
+ v453ShowPlant(id);
+ const p=getPlant(id), modal=$('modalbody');if(!p||!modal)return;
+ const div=document.createElement('div');div.className='actions';
+ const btn=document.createElement('button');btn.className='danger';btn.textContent=p.custom?'Delete variety':'Hide starter variety';btn.onclick=()=>v453DeletePlant(id);
+ div.append(btn);modal.append(div);
+};
+const v453RenderPlants=renderPlants;
+renderPlants=function(){
+ const html=v453RenderPlants();
+ const hidden=(state.hiddenPlantIds||[]).length;
+ return html+(hidden?'<div class="card"><p>'+hidden+' starter varieties hidden from database.</p><button class="secondary" onclick="v453RestorePlants()">Restore hidden varieties</button></div>':'');
 };
 
 init();
