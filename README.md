@@ -44,3 +44,12 @@ New Database Manager tab: filters for incomplete records, owned seeds, and resea
 - Continuous plant list loading while scrolling; no View More button.
 - Add to My Seeds directly from a variety, with quantity and dates.
 - Existing data key and V4.3 functionality retained.
+
+## V4.5 — New seeds automatically join the plant database
+- When adding an unlinked seed, enter the plant name and variety separately. Existing varieties are matched case- and punctuation-insensitively; new varieties are grouped under their existing plant species.
+- Unknown plant species are classified as Other until you select the appropriate category. The app does not guess.
+- New varieties are linked to the seed packet and queued for internet research.
+- When online, a best-effort Wikipedia search runs automatically and saves candidate sources for review in Database Manager. This is not guaranteed to find the exact cultivar.
+- Source descriptions are **not** automatically presented as verified sowing months, spacing or growing instructions. Review the sources and fill in verified growing information manually.
+- Works offline for seed entry; research can be retried when online.
+- Existing saved data remains in `my-allotment-planner-v1`. Export a backup before updating.
