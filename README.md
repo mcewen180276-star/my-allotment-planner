@@ -53,3 +53,6 @@ New Database Manager tab: filters for incomplete records, owned seeds, and resea
 - Source descriptions are **not** automatically presented as verified sowing months, spacing or growing instructions. Review the sources and fill in verified growing information manually.
 - Works offline for seed entry; research can be retried when online.
 - Existing saved data remains in `my-allotment-planner-v1`. Export a backup before updating.
+
+## V4.5.1 — plant groups and editable inherited guidance
+When adding an unlisted seed variety, select an existing plant group (e.g. Carrot), enter the variety, and optionally copy growing guidance from an existing variety. Copied guidance is explicitly marked as unverified for the new cultivar and can be edited later. Online research remains available. Back up before upgrading.
