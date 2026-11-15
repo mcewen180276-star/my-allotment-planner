@@ -16,3 +16,25 @@ GitHub repository → Add file → Upload files → Commit. Settings → Pages �
 Added 466 distinct plant groups across flowers, vegetables, fruits and herbs. These are name-index entries, not verified named cultivars. Their planting windows are intentionally blank rather than invented. Use Copy & customise to add verified sowing, flowering and harvest months from RHS or seed packets. Existing saved data key is unchanged.
 
 V4.1: Seed inventory entries can be edited, linked to exact database varieties, and highlighted in database. Legacy seed records retained.
+
+
+## V4.2 additions
+- Beds tab: scale-aware placement map using actual bed length and width, 25 cm grid, tap-to-place and coordinate editing, zoom, and print. Existing 4×4 and V4 grid layouts remain available separately.
+- Plant Details: add/remove compressed photographs per variety.
+- Seed Inventory: add/remove packet photographs per inventory record.
+- Photos and placements are included in JSON backups because they are stored within the existing app state. Export backups regularly; browser storage has size limits and saving many images may fail.
+- The scale diagram is a planting aid, not a surveyed CAD plan. Plant circles indicate approximate spacing.
+
+
+## V4.3 Database Manager
+New Database Manager tab: filters for incomplete records, owned seeds, and research queue; public Wikipedia research with review-before-save; five-at-a-time research queue; sources and summaries stored without overwriting existing growing instructions. Adding an unlinked seed can create a new variety and queue it for research. The original localStorage key remains unchanged. Internet access is needed for online research. Verify cultivar-specific horticultural guidance independently. Export a backup before updating.
+
+## V4.4 — easier plant database navigation
+- Category tabs for All, Vegetables, Flowers, Fruit and Herbs, with collapsible plant-name groups and progressive loading.
+- Saved plant-photo thumbnails and seed-inventory highlights showing packet quantities.
+- Month-based indoor sowing, outdoor sowing and transplant filters, plus favourites.
+- Filters for sunlight, missing growing information, missing photos, and sorting.
+- Select two or three varieties to compare growing requirements.
+- Create and assign custom plant collections.
+- All V4.3 features remain; the original localStorage key is unchanged. V4.4 preferences are additive in `state.v44`.
+- Filter dates use existing plant data only; missing growing dates are never guessed.
