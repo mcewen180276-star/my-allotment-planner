@@ -38,3 +38,9 @@ New Database Manager tab: filters for incomplete records, owned seeds, and resea
 - Create and assign custom plant collections.
 - All V4.3 features remain; the original localStorage key is unchanged. V4.4 preferences are additive in `state.v44`.
 - Filter dates use existing plant data only; missing growing dates are never guessed.
+
+## V4.4.1 fix
+- Working database category buttons with scrolling category bar.
+- Continuous plant list loading while scrolling; no View More button.
+- Add to My Seeds directly from a variety, with quantity and dates.
+- Existing data key and V4.3 functionality retained.
